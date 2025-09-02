@@ -137,5 +137,39 @@ const logoutUser = asyncHandler(async(req, res) =>{
 export {logoutUser}
 
 const updateUser = asyncHandler(async(req, res) => {
-    
+    const userId = req.user?._id;
+
+    if(!userId){
+        throw new ApiError(401, "Unauthorized request")
+    }
+
+    const {username, fullname, email, role} = req.body;
+
+    const updateFields = {};
+    if(fullname) updateFields.fullname = fullname;
+    if(username) updateFields.username = username;
+    if(email) updateFields.email = email;
+    if(role) updateFields.role = role;
+
+    const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+            $set : updateFields
+        },
+        {
+            new: true,
+            runValidators: true
+        }
+    ).select("-password");
+
+    if(!updatedUser){
+        throw new ApiError(401, "User not found");
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, "User updated successfully"))
+
 })
+
+export {updateUser}
