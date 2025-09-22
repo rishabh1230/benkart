@@ -1,56 +1,55 @@
-import mongoose from "mongoose"
-import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
+import mongoose, { Schema } from "mongoose";
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
-const productSchema = new mongoose.Schema({
+const productSchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
+      trim: true,
     },
     description: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     price: {
-        type: String,
-        required: true,
+      type: Number, // better to keep as Number, not String
+      required: true,
     },
     productImage: {
-        type: String,  // cloudinary url
-        required: true,
+      type: String, // cloudinary URL
+      required: true,
     },
     brand: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     category: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     stock: {
-        type: Number,
-        required: true,
-        default: 1,
+      type: Number,
+      required: true,
+      default: 1,
     },
     warranty: {
-        type: Number,
-        default: 1,
+      type: Number,
+      default: 1,
     },
     owner: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     ratings: {
-        type: Number,
-        default: 0,
+      type: Number,
+      default: 0,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-},
-{
-    timestamps: true,
-}
-)
+  },
+  { timestamps: true }
+);
 
-export const Product = mongoose.model("Product",productSchema)
+// add pagination plugin
+productSchema.plugin(mongooseAggregatePaginate);
+
+export const Product = mongoose.model("Product", productSchema);
