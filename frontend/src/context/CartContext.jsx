@@ -19,6 +19,7 @@ return state
 }
 }
 
+console.log('CartContext loaded')
 
 export function CartProvider({ children }) {
     const [cart, dispatch] = useReducer(reducer, [])
