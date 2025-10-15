@@ -3,6 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.route.js";
 import productRouter from "./routes/product.route.js";
+import categoryRoutes from "./routes/category.route.js";
+import uploadRoutes from "./routes/upload.routes.js";
+import orderRoutes from "./routes/order.route.js";
 
 const app = express();
 
@@ -19,7 +22,8 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/product", productRouter);
+app.use("/api/v1/products", productRouter);
+
 
 // 404 handler for unmatched routes
 app.use((req, res, next) => {

@@ -1,17 +1,40 @@
-import { Router } from "express";
-import { createProduct , getAllProducts, updateProduct, getProduct } from "../controllers/product.controller.js";
-import { upload } from "../middlewares/multer.middleware.js";
-import { verifyJWT } from "../middlewares/auth.middleware.js";
+import express from "express";
+import formidable from "express-formidable";
+const router = express.Router();
 
-const router = Router();
+// controllers
+import {
+  addProduct,
+  updateProductDetails,
+  removeProduct,
+  fetchProducts,
+  fetchProductById,
+  fetchAllProducts,
+  addProductReview,
+  fetchTopProducts,
+  fetchNewProducts,
+  filterProducts,
+} from "../controllers/product.controller.js";
+import { verifyJWT, authorizeAdmin } from "../middlewares/auth.middleware.js";
+import checkId from "../middlewares/checkId.js";
 
-router.post(
-  "/createProduct",verifyJWT,
-  upload.fields([{ name: "productImage", maxCount: 1 }]),
-  createProduct
-);
-router.route("/all").get(getAllProducts);
-router.put("/update/:id", verifyJWT, updateProduct);
-router.get("/view", verifyJWT, getProduct );
+router
+  .route("/")
+  .get(fetchProducts)
+  .post(verifyJWT, authorizeAdmin, formidable(), addProduct);
+
+router.route("/allproducts").get(fetchAllProducts);
+router.route("/:id/reviews").post(verifyJWT , checkId, addProductReview);
+
+router.get("/top", fetchTopProducts);
+router.get("/new", fetchNewProducts);
+
+router
+  .route("/:id")
+  .get(fetchProductById)
+  .put(verifyJWT, authorizeAdmin, formidable(), updateProductDetails)
+  .delete(verifyJWT, authorizeAdmin, removeProduct);
+
+router.route("/filtered-products").post(filterProducts);
 
 export default router;

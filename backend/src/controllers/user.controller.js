@@ -28,7 +28,7 @@ const registerUser = asyncHandler(async(req, res) =>{
     // modify all the required fields
     // create user for data base
     // upload the data
-    const {username, fullname, password, email, role} = req.body;
+    const {username, password, email, role} = req.body;
 
     if(!username){
         throw new ApiError(400, "Username is required");
@@ -45,7 +45,6 @@ const registerUser = asyncHandler(async(req, res) =>{
     
     const user = await User.create({
         username,
-        fullname,
         email,
         password,
         role,
